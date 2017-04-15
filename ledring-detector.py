@@ -23,7 +23,7 @@ while True:
     cv2.imshow('source', img)
 
     ret, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
-    cv2.imshow('threshold', img)
+    cv2.imshow('threshold', cv2.bitwise_not(img))
 
     # Detecting blob
     params = cv2.SimpleBlobDetector_Params()
@@ -35,6 +35,8 @@ while True:
     params.filterByInertia = False
     params.filterByArea = False
     params.filterByConvexity = False
+
+    params.minDistBetweenBlobs = 0
 
     detector = cv2.SimpleBlobDetector_create(params)
     keypoints = detector.detect(cv2.bitwise_not(img))
@@ -49,7 +51,7 @@ while True:
 
     # SolvePnP
     if len(imagePoints) == 4:
-        w = 0.02
+        w = 0.026/2.0
         objectPoints = [[0, w, 0],
                         [-w, 0, 0],
                         [w, 0, 0],
