@@ -43,7 +43,7 @@ while True:
     imagePoints = []
     for point in keypoints:
         imagePoints.append([point.pt[0], point.pt[1]])
-    imagePoints = np.array(imagePoints)
+    imagePoints = np.array(imagePoints).astype(np.float32)
 
     img = cv2.drawKeypoints(img, keypoints, np.array([]), (0, 0, 255),
                             cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
@@ -51,10 +51,14 @@ while True:
 
     # SolvePnP
     if len(imagePoints) == 4:
+        # Find convex hull of the points (we ignore orientation)
+        imagePoints = cv2.convexHull(imagePoints.reshape(4, 1, 2))
+        imagePoints = imagePoints.reshape(4, 2)
+
         w = 0.026/2.0
-        objectPoints = [[0, w, 0],
+        objectPoints = [[w, 0, 0],
+                        [0, w, 0],
                         [-w, 0, 0],
-                        [w, 0, 0],
                         [0, -w, 0]]
         objectPoints = np.array(objectPoints)
         cameraMatrix = np.array([[6.2321787645563745e+02, 0., 3.2242878461613770e+02],
