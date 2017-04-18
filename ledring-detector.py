@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+import opencvloader
 
 import sys
 
@@ -14,6 +15,8 @@ if len(sys.argv) < 2:
 context = zmq.Context()
 socket = context.socket(zmq.PUSH)
 socket.bind("tcp://*:7777")
+
+cameraParameters = opencvloader.loadYaml("c920-2.yml")
 
 cap = cv2.VideoCapture(int(sys.argv[1]))
 
@@ -61,12 +64,8 @@ while True:
                         [-w, 0, 0],
                         [0, -w, 0]]
         objectPoints = np.array(objectPoints)
-        cameraMatrix = np.array([[6.2321787645563745e+02, 0., 3.2242878461613770e+02],
-                                 [0., 6.2360826877593502e+02, 2.4359896236415980e+02],
-                                 [0., 0., 1.]])
-        distCoeffs = np.array([[1.1142910472083294e-01], [-2.6868764924280603e-01],
-                              [1.6666109149621208e-03], [2.3268549597284692e-03],
-                              [2.8967322731960432e-01]])
+        cameraMatrix = cameraParameters["camera_matrix"]
+        distCoeffs = cameraParameters["distortion_coefficients"]
 
         res, r, t = cv2.solvePnP(objectPoints, imagePoints,
                                  cameraMatrix, distCoeffs)
