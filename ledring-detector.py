@@ -8,17 +8,17 @@ import sys
 
 import zmq
 
-if len(sys.argv) < 2:
-    print("Usage: {} <camera_id>".format(sys.argv[0]))
+if len(sys.argv) < 3:
+    print("Usage: {} <camera_calib.yml> <camera_id>".format(sys.argv[0]))
     sys.exit(1)
 
 context = zmq.Context()
 socket = context.socket(zmq.PUSH)
 socket.bind("tcp://*:7777")
 
-cameraParameters = opencvloader.loadYaml("c920-2.yml")
+cameraParameters = opencvloader.loadYaml(sys.argv[1])
 
-cap = cv2.VideoCapture(int(sys.argv[1]))
+cap = cv2.VideoCapture(int(sys.argv[2]))
 
 while True:
     ret, frame = cap.read()
