@@ -7,4 +7,4 @@ Designed to detect 4 white LEDs displayed at corners of a square by the led-ring
 The LED pattern is setup using the led-ring tab of the crazyflie-client.
 A branch with an expos tab is used for the crazyflie-client: https://github.com/ataffanel/crazyflie-clients-python/tree/dev-extpos.
 
-The detector is currently hardcoded for the Logitech c920 webcam, at least until the camera calibration file is loaded from the YAML file.
+The detector requires a Yaml opencv camera calibration file.
